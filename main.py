@@ -6,14 +6,17 @@ Created on Fri Dec 28 15:54:48 2018
 @author: pmaglione
 """
 
-import scipy
 import math
 import numpy as np
 import random
+from scipy.stats import beta
 
 def binomial_likelihood(p, n, y):
     return (math.factorial(n) / (math.factorial(y) * math.factorial(n - y))) * math.pow(p, y) * math.pow(1 - p, n - y)
     
+
+def get_workers_accuracy(acc):
+    return sum(acc) / len(acc)
 
 class Classificator:
     '''
@@ -28,7 +31,7 @@ class Classificator:
     '''
     def decision_fn(votes, classification_threshold, cost_ratio, classification_function, accuracy):
         prior = .5
-        posterior = classification_fn(votes, prior, accuracy)
+        posterior = classification_function(votes, prior, accuracy)
         #next_prob = accuracy * posterior + (1 - accuracy) * (1 - posterior)
 
         if posterior > classification_threshold:
@@ -54,10 +57,11 @@ class Workers:
                 worker_acc_pos = 0.5
             else:
                 # worker_type is 'worker'
-                worker_acc_pos = 0.5 + (np.random.beta(1, 1) * 0.5)
+                worker_acc_pos = 0.8 + (np.random.beta(1, 1) * 0.2)
             
             self.acc_passed.append(worker_acc_pos)
-                
+        #end for
+            
         return self.acc_passed
 
 class Generator:
@@ -78,13 +82,25 @@ class Generator:
             else:
                 val = 0
             gold_data.append(val)
+        #end for
         return gold_data
     
-    def classification_fn(votes, prior, accuracy):    
+    def classification_fn_posterior(self, votes, prior, accuracy):    
         n = len(votes)
         y = sum(votes)
 
         likelihood = binomial_likelihood(accuracy, n, y)
+
+        #bayes theorem
+        posterior = (likelihood * prior) / ((likelihood * prior) + (1 - accuracy) * (1 - prior))
+
+        return posterior
+    
+    def classification_fn_sf(self, votes, prior, accuracy):    
+        n = len(votes) + 2
+        y = sum(votes) + 1
+
+        likelihood = beta.sf(.5, n, y)
 
         #bayes theorem
         posterior = (likelihood * prior) / ((likelihood * prior) + (1 - accuracy) * (1 - prior))
@@ -108,7 +124,7 @@ class Generator:
         workers_accuracy = self.workers_accuracy
         total_votes = []
         workers_num = len(self.workers_accuracy)
-        accuracy_media = sum(self.workers_accuracy) / workers_num
+        accuracy_media = get_workers_accuracy(workers_accuracy)
 
         for i in range(items_num):
             item_votes = []
@@ -121,22 +137,24 @@ class Generator:
                 else:
                     vote = 0
                 item_votes.append(vote)
-
-                get_more_votes = Classificator.decision_fn(item_votes, self.classification_threshold, self.cost_ratio, classification_fn, accuracy_media)
                 
+                #Ask if must continue or not
+                get_more_votes = Classificator.decision_fn(item_votes, self.classification_threshold, self.cost_ratio, 
+                                                           self.classification_fn_posterior, accuracy_media)
+            #end while
                 
             total_votes.append(item_votes)
-                
+         #end for     
             
         return total_votes
     
 z = 0.1 #% cheaters
 items_num = 100
 ct = .9
-cr = .1 #ratio 1:10
+cr = .01 #ratio 1:100
 iter_num = 1
 data = []
-workers_num = 10000
+workers_num = 1000
 
 for _ in range(iter_num):
     workers_accuracy = Workers(workers_num, z).simulate_workers()
@@ -152,3 +170,7 @@ for _ in range(iter_num):
 ground_truth = Generator(params).generate_gold_data(items_num)
 
 votes = Generator(params).generate_votes_gt(items_num)
+
+print(len([a for a in votes if len(a) < (1/cr)]))
+print("Workers general acc: %{:1.2f}".format(get_workers_accuracy(workers_accuracy) * 100))
+
