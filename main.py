@@ -11,6 +11,7 @@ import numpy as np
 import random
 from scipy.stats import beta
 
+#utils
 def binomial_likelihood(p, n, y):
     return (math.factorial(n) / (math.factorial(y) * math.factorial(n - y))) * math.pow(p, y) * math.pow(1 - p, n - y)
     
@@ -18,7 +19,7 @@ def binomial_likelihood(p, n, y):
 def get_workers_accuracy(acc):
     return sum(acc) / len(acc)
 
-class Classificator:
+class Evaluator:
     '''
     Function for deciding to continue or not collecting votes over a task.
 
@@ -63,6 +64,26 @@ class Workers:
         #end for
             
         return self.acc_passed
+    
+class Classificator:
+    def classification_fn_posterior(votes, prior, accuracy):    
+        n = len(votes)
+        y = sum(votes)
+
+        likelihood = binomial_likelihood(prior, n, y)
+
+        #bayes theorem
+        posterior = (likelihood * prior) / ((likelihood * prior) + (1 - accuracy) * (1 - prior))
+
+        return posterior
+    
+    def classification_fn_beta_pdf(votes, th, accuracy):    
+        n = len(votes)
+        y = sum(votes)
+
+        posterior = beta.sf(th, 1 + y, 1 + (n - y))
+
+        return posterior
 
 class Generator:
 
@@ -84,28 +105,6 @@ class Generator:
             gold_data.append(val)
         #end for
         return gold_data
-    
-    def classification_fn_posterior(self, votes, prior, accuracy):    
-        n = len(votes)
-        y = sum(votes)
-
-        likelihood = binomial_likelihood(prior, n, y)
-
-        #bayes theorem
-        posterior = (likelihood * prior) / ((likelihood * prior) + (1 - accuracy) * (1 - prior))
-
-        return posterior
-    
-    def classification_fn_beta_pdf(self, votes, prior, accuracy):    
-        n = len(votes)
-        y = sum(votes)
-
-        likelihood = beta.pdf(prior, 1 + y, 1 + (n - y))
-
-        #bayes theorem
-        posterior = (likelihood * prior) / ((likelihood * prior) + (1 - accuracy) * (1 - prior))
-
-        return posterior
     
     def get_random_worker_accuracy(self, item, items_num):       
         worker_found = False
@@ -139,14 +138,15 @@ class Generator:
                 item_votes.append(vote)
                 
                 #Ask if must continue or not
-                get_more_votes = Classificator.decision_fn(item_votes, self.classification_threshold, self.cost_ratio, 
-                                                           self.classification_fn_beta_pdf, accuracy_media)
+                get_more_votes = Evaluator.decision_fn(item_votes, self.classification_threshold, self.cost_ratio, 
+                                                           Classificator.classification_fn_posterior, accuracy_media)
             #end while
                 
             total_votes.append(item_votes)
          #end for     
             
         return total_votes
+
 
 
 #assumptions
@@ -182,4 +182,4 @@ print("#items classified: {}".format(len([a for a in votes if len(a) < (1/cr)]))
 print("Workers general acc: %{:1.2f}".format(get_workers_accuracy(workers_accuracy) * 100))
 print("# ground truth IN items: {}".format(len([a for a in ground_truth if a == 1])))
 
-
+#print(sum([sum(a) for a in votes])/len(votes))
