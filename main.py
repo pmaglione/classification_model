@@ -89,18 +89,18 @@ class Generator:
         n = len(votes)
         y = sum(votes)
 
-        likelihood = binomial_likelihood(accuracy, n, y)
+        likelihood = binomial_likelihood(prior, n, y)
 
         #bayes theorem
         posterior = (likelihood * prior) / ((likelihood * prior) + (1 - accuracy) * (1 - prior))
 
         return posterior
     
-    def classification_fn_sf(self, votes, prior, accuracy):    
-        n = len(votes) + 2
-        y = sum(votes) + 1
+    def classification_fn_beta_pdf(self, votes, prior, accuracy):    
+        n = len(votes)
+        y = sum(votes)
 
-        likelihood = beta.sf(.5, n, y)
+        likelihood = beta.pdf(prior, 1 + y, 1 + (n - y))
 
         #bayes theorem
         posterior = (likelihood * prior) / ((likelihood * prior) + (1 - accuracy) * (1 - prior))
@@ -140,20 +140,26 @@ class Generator:
                 
                 #Ask if must continue or not
                 get_more_votes = Classificator.decision_fn(item_votes, self.classification_threshold, self.cost_ratio, 
-                                                           self.classification_fn_posterior, accuracy_media)
+                                                           self.classification_fn_beta_pdf, accuracy_media)
             #end while
                 
             total_votes.append(item_votes)
          #end for     
             
         return total_votes
-    
+
+
+#assumptions
+#1 condition
+#difficulty of tasks are all equal
+#there are no test questions
+#there are a percent of cheaters
+        
 z = 0.1 #% cheaters
 items_num = 100
 ct = .9
 cr = .01 #ratio 1:100
 iter_num = 1
-data = []
 workers_num = 1000
 
 for _ in range(iter_num):
@@ -167,10 +173,13 @@ for _ in range(iter_num):
         'classification_threshold': ct
     }
 
-ground_truth = Generator(params).generate_gold_data(items_num)
+    ground_truth = Generator(params).generate_gold_data(items_num)
+    
+    votes = Generator(params).generate_votes_gt(items_num)
+#end for
 
-votes = Generator(params).generate_votes_gt(items_num)
-
-print(len([a for a in votes if len(a) < (1/cr)]))
+print("#items classified: {}".format(len([a for a in votes if len(a) < (1/cr)])))
 print("Workers general acc: %{:1.2f}".format(get_workers_accuracy(workers_accuracy) * 100))
+print("# ground truth IN items: {}".format(len([a for a in ground_truth if a == 1])))
+
 
