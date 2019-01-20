@@ -164,7 +164,7 @@ def get_items_predicted_classified(results):
 #calculates the total cost = crowd cost(all votes) + expert cost
 def get_total_cost(votes, cr, cf, th):
     total_votes_amount = sum([len(v) for i, v in votes.items()])
-    unclassified_items_amount = len([i for (i, v) in votes.items() if cf(input_adapter_single(v)) <= th])
+    unclassified_items_amount = len([i for (i, v) in votes.items() if cf(input_adapter_single(v)) <= th and cf(input_adapter_single(v)) > .3])
     
     crowd_cost = total_votes_amount * cr
     cost = crowd_cost + (unclassified_items_amount * (1 / cr))
