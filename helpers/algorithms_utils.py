@@ -72,8 +72,8 @@ def plot_results(x, ys, xlabel, ylabel):
     
 #workers
 def simulate_workers(workers_num, cheaters_prop, fixed_acc, workers_acc):
-    workers = []
-    for _ in range(workers_num):
+    workers = {}
+    for i in range(workers_num):
         if (fixed_acc == False):
             if np.random.binomial(1, cheaters_prop):
                 # worker_type is 'rand_ch'
@@ -84,34 +84,29 @@ def simulate_workers(workers_num, cheaters_prop, fixed_acc, workers_acc):
                 worker_acc_neg = worker_acc_pos + 0.1 if worker_acc_pos + 0.1 <= 1. else 1.
         else:
             worker_acc_pos = workers_acc
-            worker_acc_neg = worker_acc_pos + 0.1 if worker_acc_pos + 0.1 <= 1. else 1.
+            worker_acc_neg = worker_acc_pos
 
-        workers.append([worker_acc_pos, worker_acc_neg])
+        workers[i] = [worker_acc_pos, worker_acc_neg]
 
     return workers
 
-def get_random_worker_accuracy(workers_accuracy, item_id, votes, items_num):
+def get_random_worker_accuracy(workers_accuracy, item_id, votes):
     item_votes = votes[item_id]
     worker_ids_used = item_votes.keys()
-    workers_ids_unused = np.arange(0, items_num - 1)
-
-    for w_id in worker_ids_used:
-        elem_key = np.where(workers_ids_unused==w_id)
-        workers_ids_unused = np.delete(workers_ids_unused, elem_key)
-
+    workers_ids_range = workers_accuracy.keys()
+    workers_ids_unused = [val for val in workers_ids_range if val not in worker_ids_used]
+    
     selected_worker_id = np.random.choice(workers_ids_unused)
     worker_acc_pos = workers_accuracy[selected_worker_id][0]
     worker_acc_neg = workers_accuracy[selected_worker_id][1]
 
     return {'worker_id': selected_worker_id, 'acc_pos':worker_acc_pos, 'acc_neg': worker_acc_neg}
 
-def get_worker_vote(workers_accuracy, i, gt, votes, items_num):
-    worker_data = get_random_worker_accuracy(workers_accuracy, i, votes, items_num)
+def get_worker_vote(workers_accuracy, i, gt, votes):
+    worker_data = get_random_worker_accuracy(workers_accuracy, i, votes)
     worker_id, worker_acc_pos, worker_acc_neg = worker_data['worker_id'], worker_data['acc_pos'], worker_data['acc_neg']
 
-    item_is_pos = gt[i] == 1
-
-    if (item_is_pos):
+    if (gt[i]):
         worker_acc = worker_acc_pos
     else:
         worker_acc = worker_acc_neg
@@ -136,17 +131,27 @@ def generate_gold_data(items_num, possitive_percentage):
 
     return gold_data
 
-def classify_items(votes, gt, cf, th):
+def classify_items_smart(votes, gt, cf, th):
     items_classification = {}
     for i, v in votes.items():
         prob = cf(input_adapter_single(v))
         if (prob > th):
-            if(gt[i] == 1):
-                items_classification[i] = 1
-            else:
-                items_classification[i] = 0
+            items_classification[i] = 1
+        elif (prob <= .3):
+            items_classification[i] = 0
         else:
-            items_classification[i] = gt[i] #if didnt reach the threshold, switch to expert vote
+            items_classification[i] = gt[i] #if .3 < prob < th get expert vote
+
+    return items_classification
+
+def classify_items_mv(votes, gt, cf, th):
+    items_classification = []
+    for i, v in votes.items():
+        prob = cf(input_adapter_single(v))
+        if (prob >= th):
+            items_classification.append(1)
+        else:
+            items_classification.append(0)
 
     return items_classification
 
@@ -175,14 +180,10 @@ class Metrics:
 
     @staticmethod
     def compute_metrics(items_classification, gt):
-        gt_scope = []
-
         # FP == False Inclusion
         # FN == False Exclusion
         fp = fn = tp = tn = 0.
-        for item_id in range(len(gt)):
-            gt_val = gt[item_id]
-            cl_val = items_classification[item_id]
+        for gt_val, cl_val in zip(gt, items_classification):
             if gt_val and not cl_val:
                 fn += 1
             if not gt_val and cl_val:
@@ -193,11 +194,15 @@ class Metrics:
                 tn += 1
                         
         if (tp + fn > 0):
-            recall = tp / (tp + fn)
+            recall = tp / (tp + fn)            
+        else:
+            recall = 0
+            
+        if (tp + fp > 0):
             precision = tp / (tp + fp)
         else:
-            recall = tp
-            precision = tp
+            precision = 0
+            
         loss = (fp + fn) / len(gt)
         
         return loss,  recall, precision
