@@ -132,15 +132,15 @@ def generate_gold_data(items_num, possitive_percentage):
     return gold_data
 
 def classify_items_smart(votes, gt, cf, th):
-    items_classification = {}
+    items_classification = []
     for i, v in votes.items():
         prob = cf(input_adapter_single(v))
         if (prob > th):
-            items_classification[i] = 1
+            items_classification.append(1)
         elif (prob <= .3):
-            items_classification[i] = 0
+            items_classification.append(0)
         else:
-            items_classification[i] = gt[i] #if .3 < prob < th get expert vote
+            items_classification.append(gt[i]) #if .3 < prob < th get expert vote
 
     return items_classification
 
