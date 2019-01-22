@@ -68,6 +68,28 @@ def plot_results(x, ys, xlabel, ylabel):
     plt.ylabel(ylabel)
     plt.legend()
     plt.show()
+    
+def print_hyperparameters(cf, cr,base_votes_per_item, drawing_simulations_amount, expert_cost_increment, workers_num, z, fixed_acc, items_num, data_true_percentage, iterations_per_ct, cts):
+    print(f"""
+        Hyparparameters:
+            - Classification
+                * Classification function: {cf.__name__}
+                * Cost ratio: {cr}
+            - Classification thresholds:
+                * {cts}
+            - Items
+                * Amount: {items_num} 
+                * Ground true percentage: {data_true_percentage}
+            - MV votes:
+                * Base votes per item: {base_votes_per_item}
+            - Workers
+                * Amount of workers: {workers_num}
+                * Cheaters percentage: {z}
+                * Workers fixed accuracy? {fixed_acc}
+            - Cost estimator fn
+                * Cost estimator drawing number: {drawing_simulations_amount}
+                * Expert cost increment: {expert_cost_increment}
+    """)
 #end
     
 #workers
@@ -131,7 +153,7 @@ def generate_gold_data(items_num, possitive_percentage):
 
     return gold_data
 
-def classify_items_smart(votes, gt, cf, th):
+def classify_items_with_expert(votes, gt, cf, th):
     items_classification = []
     for i, v in votes.items():
         prob = cf(input_adapter_single(v))
@@ -148,7 +170,7 @@ def classify_items_mv(votes, gt, cf, th):
     items_classification = []
     for i, v in votes.items():
         prob = cf(input_adapter_single(v))
-        if (prob >= th):
+        if (prob > th):
             items_classification.append(1)
         else:
             items_classification.append(0)
@@ -162,16 +184,21 @@ def get_items_predicted_classified(results):
 
 #cost utils
 #calculates the total cost = crowd cost(all votes) + expert cost
-def get_total_cost(votes, cr, cf, th):
-    total_votes_amount = sum([len(v) for i, v in votes.items()])
-    unclassified_items_amount = len([i for (i, v) in votes.items() if cf(input_adapter_single(v)) <= th and cf(input_adapter_single(v)) > .3])
+def get_total_cost(votes, cr, cf, th, use_expert):
+    total_votes_amount = sum([len(v) for i, v in votes.items()]) 
     
     crowd_cost = total_votes_amount * cr
-    cost = crowd_cost + (unclassified_items_amount * (1 / cr))
+    total_cost = crowd_cost
+    
+    if (use_expert): #use some criteria for identifying items sent to expert
+        unclassified_items_amount = len([i for (i, v) in votes.items() if cf(input_adapter_single(v)) <= th and cf(input_adapter_single(v)) > .3])
+        total_cost = crowd_cost + (unclassified_items_amount * (1 / cr))
+    else:
+        unclassified_items_amount = len([i for (i, v) in votes.items() if cf(input_adapter_single(v)) <= th])
     
     classified_items_amount = len(votes) - unclassified_items_amount
     
-    return classified_items_amount, unclassified_items_amount, crowd_cost, cost
+    return classified_items_amount, unclassified_items_amount, crowd_cost, total_cost
 
 #end
     
