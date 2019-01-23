@@ -3,12 +3,13 @@ import matplotlib.cm as cm
 import pandas as pd
 import numpy as np
 import random
+import itertools
 
 #input adapters
 def input_adapter(responses):
     '''
     :param responses:
-    :return: Psi, N
+    :return: Psi
     '''
     Psi = [[] for _ in responses.keys()]
     for obj_id, obj_responses in responses.items():
@@ -21,6 +22,14 @@ def input_adapter_single(responses):
     :param responses:
     :return: Psi, N
     '''
+    #recreate array
+    responses_aux = {}
+    i = 0
+    for key, response in responses.items():
+        responses_aux[i] = response
+        i += 1
+    responses = responses_aux
+    
     responses = {0: responses}
     Psi = [[] for _ in responses.keys()]
     for obj_id, obj_responses in responses.items():
@@ -52,6 +61,8 @@ ylabel - label of y
 '''
 def plot_results(x, ys, xlabel, ylabel):
     colors = cm.rainbow(np.linspace(0, 1, len(ys)))
+    marker = itertools.cycle((',', '+', '.', 'o', '*')) 
+    linestyles = itertools.cycle(('-', '--', '-.', ':'))
 
     data = {'x': x}
     for y_key, y_val in ys.items():
@@ -61,7 +72,7 @@ def plot_results(x, ys, xlabel, ylabel):
  
     i = 0
     for y_key, y_val in ys.items():
-        plt.plot(data['x'], y_key, data=df, marker='', color=colors[i], linewidth=2, label=y_key)
+        plt.plot(data['x'], y_key, data=df, linestyle=next(linestyles), color=colors[i], linewidth=2, label=y_key)
         i += 1
 
     plt.xlabel(xlabel)
@@ -69,7 +80,8 @@ def plot_results(x, ys, xlabel, ylabel):
     plt.legend()
     plt.show()
     
-def print_hyperparameters(cf, cr,base_votes_per_item, drawing_simulations_amount, expert_cost_increment, workers_num, z, fixed_acc, items_num, data_true_percentage, iterations_per_ct, cts):
+def print_hyperparameters(cf, cr,base_votes_per_item, drawing_simulations_amount, expert_cost_increment, workers_num, z, 
+                          fixed_acc, base_workers_acc, fixed_workers_acc, items_num, data_true_percentage, iterations_per_ct, cts):
     print(f"""
         Hyparparameters:
             - Classification
@@ -85,7 +97,9 @@ def print_hyperparameters(cf, cr,base_votes_per_item, drawing_simulations_amount
             - Workers
                 * Amount of workers: {workers_num}
                 * Cheaters percentage: {z}
+                * If not fixed, workers accuracy > {base_workers_acc} 
                 * Workers fixed accuracy? {fixed_acc}
+                * Fixed number: {fixed_workers_acc}
             - Cost estimator fn
                 * Cost estimator drawing number: {drawing_simulations_amount}
                 * Expert cost increment: {expert_cost_increment}
@@ -93,7 +107,7 @@ def print_hyperparameters(cf, cr,base_votes_per_item, drawing_simulations_amount
 #end
     
 #workers
-def simulate_workers(workers_num, cheaters_prop, fixed_acc, workers_acc):
+def simulate_workers(workers_num, cheaters_prop, fixed_acc, workers_acc, base_acc = .5):
     workers = {}
     for i in range(workers_num):
         if (fixed_acc == False):
@@ -102,7 +116,7 @@ def simulate_workers(workers_num, cheaters_prop, fixed_acc, workers_acc):
                 worker_acc_pos = worker_acc_neg = 0.5
             else:
                 # worker_type is 'worker'
-                worker_acc_pos = 0.5 + (np.random.beta(1, 1) * 0.5)
+                worker_acc_pos = base_acc + (np.random.beta(1, 1) * (1 - base_acc))
                 worker_acc_neg = worker_acc_pos + 0.1 if worker_acc_pos + 0.1 <= 1. else 1.
         else:
             worker_acc_pos = workers_acc
@@ -200,6 +214,8 @@ def get_total_cost(votes, cr, cf, th, use_expert):
     
     return classified_items_amount, unclassified_items_amount, crowd_cost, total_cost
 
+def get_crowd_cost(item_votes, cr):
+    return len(item_votes) * cr
 #end
     
 #metrics
@@ -220,16 +236,9 @@ class Metrics:
             if not gt_val and not cl_val:
                 tn += 1
                         
-        if (tp + fn > 0):
-            recall = tp / (tp + fn)            
-        else:
-            recall = 0
-            
-        if (tp + fp > 0):
-            precision = tp / (tp + fp)
-        else:
-            precision = 0
-            
+
+        recall = tp / (tp + fn)          
+        precision = tp / (tp + fp)
         loss = (fp + fn) / len(gt)
         
         return loss,  recall, precision
