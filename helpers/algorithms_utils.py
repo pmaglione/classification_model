@@ -81,7 +81,8 @@ def plot_results(x, ys, xlabel, ylabel):
     plt.show()
     
 def print_hyperparameters(cf, cr,base_votes_per_item, drawing_simulations_amount, expert_cost_increment, workers_num, z, 
-                          fixed_acc, base_workers_acc, fixed_workers_acc, items_num, data_true_percentage, iterations_per_ct, cts):
+                          fixed_acc, base_workers_acc, fixed_workers_acc, items_num, data_true_percentage,
+                          iterations_per_ct, cts):
     print(f"""
         Hyparparameters:
             - Classification
@@ -103,6 +104,8 @@ def print_hyperparameters(cf, cr,base_votes_per_item, drawing_simulations_amount
             - Cost estimator fn
                 * Cost estimator drawing number: {drawing_simulations_amount}
                 * Expert cost increment: {expert_cost_increment}
+            - Experiments convergence:
+                * # iterations per classification threshold: {iterations_per_ct}
     """)
 #end
     
