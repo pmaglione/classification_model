@@ -183,17 +183,22 @@ def classify_items_with_expert(votes, gt, cf, th):
 def classify_items_mv(votes, gt, cf, th):
     items_classification = []
     for i, v in votes.items():
-        prob = cf(input_adapter_single(v))
-        if (prob > th):
-            items_classification.append(1)
-        else:
+        p_in = cf(input_adapter_single(v))
+        p_out = 1 - p_in
+        if (p_out > th):
             items_classification.append(0)
+        else:
+            items_classification.append(1)
 
     return items_classification
 
 def get_items_predicted_classified(results):
     return {i:v for (i,v) in results.items() if v == True}
 
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
 #end
 
 #cost utils
