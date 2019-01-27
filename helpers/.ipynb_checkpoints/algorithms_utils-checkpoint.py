@@ -4,6 +4,10 @@ import pandas as pd
 import numpy as np
 import random
 import itertools
+import math
+from matplotlib.ticker import NullFormatter 
+import warnings
+warnings.filterwarnings("ignore")
 
 #input adapters
 def input_adapter(responses):
@@ -59,25 +63,48 @@ y - dict of y values where key is the label of the element
 xlabel - label of x
 ylabel - label of y
 '''
-def plot_results(x, ys, xlabel, ylabel):
-    colors = cm.rainbow(np.linspace(0, 1, len(ys)))
+def plot_results(x, xlabel, results, print_columns):
+    colors = cm.rainbow(np.linspace(0, 1, len(results)))
     marker = itertools.cycle((',', '+', '.', 'o', '*')) 
     linestyles = itertools.cycle(('-', '--', '-.', ':'))
-
     data = {'x': x}
-    for y_key, y_val in ys.items():
-        data[y_key] = y_val
+    
+    rows = math.ceil(len(print_columns)/3)
+    k = int(f'{rows}31')
+    plt.figure(num=None, figsize=(18, 10), dpi=80, facecolor='w', edgecolor='k')
+    plt.tight_layout()
+    for column in print_columns:
+        ylabel = column
+        
+        ys = {}
+        for d_key, d_val in results.items():
+            ys[d_key] = d_val[column]
+        
+        for y_key, y_val in ys.items():
+            data[y_key] = y_val
 
-    df=pd.DataFrame(data)
- 
-    i = 0
-    for y_key, y_val in ys.items():
-        plt.plot(data['x'], y_key, data=df, linestyle=next(linestyles), color=colors[i], linewidth=2, label=y_key)
-        i += 1
+        df=pd.DataFrame(data)
 
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.legend()
+        i = 0
+        for y_key, y_val in ys.items():
+            plt.subplot(k)
+            plt.plot(data['x'], y_key, data=df, linestyle=next(linestyles), color=colors[i], linewidth=2, label=y_key)
+            i += 1
+
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+        plt.legend()
+        
+        k += 1
+    #end for
+    
+    plt.gca().yaxis.set_minor_formatter(NullFormatter())
+    plt.subplots_adjust(left  = 0.125,  # the left side of the subplots of the figure,
+                        right = 0.9,    # the right side of the subplots of the figure,
+                        bottom = 0.1,   # the bottom of the subplots of the figure,
+                        top = 0.9,      # the top of the subplots of the figure,
+                        wspace = 0.4,   # the amount of width reserved for blank space between subplots,
+                        hspace = 0.2)
     plt.show()
     
 def print_hyperparameters(cf, cr,base_votes_per_item, drawing_simulations_amount, expert_cost_increment, workers_num, z, 
