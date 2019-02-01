@@ -69,7 +69,11 @@ def plot_results(x, xlabel, results, print_columns):
     linestyles = itertools.cycle(('-', '--', '-.', ':'))
     data = {'x': x}
     
-    rows = math.ceil(len(print_columns)/3)
+    if (len(print_columns) > 3):
+        rows = math.ceil(len(print_columns)/3)
+    else:
+        rows = 3
+        
     k = int(f'{rows}31')
     plt.figure(num=None, figsize=(18, 10), dpi=80, facecolor='w', edgecolor='k')
     plt.tight_layout()
@@ -89,6 +93,7 @@ def plot_results(x, xlabel, results, print_columns):
         for y_key, y_val in ys.items():
             plt.subplot(k)
             plt.plot(data['x'], y_key, data=df, linestyle=next(linestyles), color=colors[i], linewidth=2, label=y_key)
+            plt.xticks(data['x'])
             i += 1
 
         plt.xlabel(xlabel)
@@ -109,7 +114,7 @@ def plot_results(x, xlabel, results, print_columns):
     
 def print_hyperparameters(cf, cr,base_votes_per_item, drawing_simulations_amount, expert_cost_increment, workers_num, z, 
                           fixed_acc, base_workers_acc, fixed_workers_acc, items_num, data_true_percentage,
-                          iterations_per_ct, cts):
+                          iterations_per_ct, cts, k):
     print(f"""
         Hyparparameters:
             - Classification
@@ -133,6 +138,8 @@ def print_hyperparameters(cf, cr,base_votes_per_item, drawing_simulations_amount
                 * Expert cost increment: {expert_cost_increment}
             - Experiments convergence:
                 * # iterations per classification threshold: {iterations_per_ct}
+            - Penalization in false negatives
+                * k: {k}
     """)
 #end
     
@@ -147,7 +154,8 @@ def simulate_workers(workers_num, cheaters_prop, fixed_acc, workers_acc, base_ac
             else:
                 # worker_type is 'worker'
                 worker_acc_pos = base_acc + (np.random.beta(1, 1) * (1 - base_acc))
-                worker_acc_neg = worker_acc_pos + 0.1 if worker_acc_pos + 0.1 <= 1. else 1.
+                #worker_acc_neg = worker_acc_pos + 0.1 if worker_acc_pos + 0.1 <= 1. else 1.
+                worker_acc_neg = worker_acc_pos
         else:
             worker_acc_pos = workers_acc
             worker_acc_neg = worker_acc_pos
@@ -257,7 +265,8 @@ def get_crowd_cost(item_votes, cr):
 class Metrics:
 
     @staticmethod
-    def compute_metrics(items_classification, gt):
+    #k penalization for false negatives
+    def compute_metrics(items_classification, gt, k = 1):
         # FP == False Inclusion
         # FN == False Exclusion
         fp = fn = tp = tn = 0.
@@ -274,8 +283,8 @@ class Metrics:
 
         recall = tp / (tp + fn)          
         precision = tp / (tp + fp)
-        loss = (fp + fn) / len(gt)
+        loss = (fp + (fn * k)) / len(gt)
         
-        return loss,  recall, precision
+        return loss, recall, precision
     
 #end
