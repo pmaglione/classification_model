@@ -1,2 +1,2 @@
 Threshold,Cost mean,Cost Std,TC mean,TC std,Loss mean,Loss Std,Recall mean,Recall Std,Precision mean,Precision Std
-0.5,150.0,0.0,150.0,0.0,0.22,0.023,0.841,0.036,0.375,0.024
+0.5,118.74,0.784,118.74,0.784,0.781,0.047,0.842,0.009,0.998,0.001
