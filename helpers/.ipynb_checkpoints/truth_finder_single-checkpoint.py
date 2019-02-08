@@ -7,7 +7,7 @@ def truth_finder_single(Psi):
     '''
     N = len(Psi[0])
     M = 1
-
-    _, p = truth_finder_multiple(N, M, Psi)
     
-    return p[0][1]
+    result = truth_finder_multiple(N, M, Psi)
+    
+    return result[1][0][1]
