@@ -296,7 +296,16 @@ class Metrics:
 #end
 
 #data utils
-def load_data(path, predicates):
+def load_data(datasets, i, predicate_type = 'single'):
+    folder = datasets[i]['folder']
+    filename = datasets[i]['filename']
+    path = f'data/{folder}/{filename}'
+    
+    if (predicate_type == 'single'):
+        predicates = [datasets[i]['predicates'][0]]
+    else:
+        predicates = datasets[i]['predicates']
+        
     data = pd.read_csv(path)
     y_predicate = {}  # gt labels per predicate
     for pr in predicates:

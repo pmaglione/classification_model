@@ -1,0 +1,2 @@
+worker_tests,worker_tests,lr,loss_mean,loss_std,price_mean,price_std,algorithm,recall,recall_std,precision,precision_std,f_beta,f_beta_std,baseround_items,total_items,theta,filters_num
+5,5,5,0.8074418604651161,0.13518038875082544,6.800687563195147,2.705122639016404,Crowd-Ensemble,0.34842549184329435,0.1395786285253507,0.8864756893250602,0.05248953592702464,0.3843241039256459,0.1459541084940994,20,989,0.3,2
