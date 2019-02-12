@@ -16,9 +16,13 @@ def input_adapter(responses):
     :return: Psi
     '''
     Psi = [[] for _ in responses.keys()]
+    i = 0
     for obj_id, obj_responses in responses.items():
+        k = 0
         for worker_id, worker_response in obj_responses.items():
-            Psi[obj_id].append((worker_id, worker_response[0]))
+            Psi[i].append((k, worker_response[0]))
+            k += 1
+        i += 1
     return Psi
 
 def input_adapter_single(responses):
