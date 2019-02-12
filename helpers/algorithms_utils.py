@@ -316,3 +316,15 @@ def load_data(datasets, i, predicate_type = 'single'):
         y_predicate[pr] = data[pr].values
 
     return y_predicate
+
+#real datasets utils
+def get_dataset_next_worker_vote(responses, item_votes, i, categories):
+    item_responses = responses[responses[1] == i]
+    worker_votes = zip(item_responses[0], item_responses[2])
+    
+    for worker_id, worker_vote in worker_votes:
+        if(worker_id not in item_votes):
+            return worker_id, list(categories[0]).index(worker_vote) #get binary value 0/1
+            break
+                
+    raise ValueError('empty value')
