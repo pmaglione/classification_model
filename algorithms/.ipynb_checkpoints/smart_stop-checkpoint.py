@@ -4,7 +4,7 @@ from helpers.truth_finder import expectation_maximization
 from scipy.stats import binom
 
 #hyperparameters
-drawing_simulations_amount = 10
+drawing_simulations_amount = 50
 expert_cost_increment = 2
 
 '''
@@ -30,11 +30,12 @@ def cost_estimator(v, ct, cf, cr):
                 simulated_costs.append(alg_utils.get_crowd_cost(i_item_votes, cr))
             else:
                 vote = np.random.binomial(1, classification_prob_in)
+                
                 new_index = max(i_item_votes.keys()) + 1
                 i_item_votes[new_index] = [vote]
                 actual_cost = alg_utils.get_crowd_cost(i_item_votes, cr)
 
-                if((actual_cost) >= (1 * expert_cost_increment)):
+                if((actual_cost) > (1 * expert_cost_increment)):
                     must_continue = False
                     simulated_costs.append(actual_cost)
         #end while      
@@ -74,7 +75,7 @@ def decision_function_mv(items, votes, ct, cr, cf):
         else:
             cost_mean, cost_std = cost_estimator(item_votes, ct, cf, cr)
 
-            if(cost_mean > (1 + (alg_utils.get_crowd_cost(item_votes, cr)))):
+            if(cost_mean > (1 * expert_cost_increment)):
                 results[item_id] = False
         
     
@@ -93,19 +94,16 @@ def cost_estimator_em(v, ct, cf, cr, acc):
                 must_continue = False            
                 simulated_costs.append(alg_utils.get_crowd_cost(i_item_votes, cr))
             else:
-                pos_v = sum([x[0] for k,x in i_item_votes.items()])
-                neg_v = len(i_item_votes) - pos_v
-                like_in = binom.pmf(pos_v, pos_v+neg_v, acc)
-                like_out = binom.pmf(neg_v, pos_v+neg_v, acc)
-
-                prob_in = like_in / (like_in  + like_out)
-                
-                vote = np.random.binomial(1, prob_in)
+                if(classification_prob_in >= classification_prob_out):
+                    vote = np.random.binomial(1, acc) #inclusion vote
+                else:
+                    vote = np.random.binomial(0, acc) #exclusion vote
+                    
                 new_index = max(i_item_votes.keys()) + 1
                 i_item_votes[new_index] = [vote]
                 actual_cost = alg_utils.get_crowd_cost(i_item_votes, cr)
 
-                if((actual_cost) >= (1 * expert_cost_increment)):
+                if((actual_cost) > (1 * expert_cost_increment)):
                     must_continue = False
                     simulated_costs.append(actual_cost)
         #end while      
@@ -129,8 +127,16 @@ def decision_function_em(items, votes, ct, cr, cf):
         else:
             cost_mean, cost_std = cost_estimator_em(item_votes, ct, cf, cr, acc_est)
 
-            if(cost_mean > (1 + (alg_utils.get_crowd_cost(item_votes, cr)))):
+            if(cost_mean > (1 * expert_cost_increment)):
                 results[item_id] = False
         
     
     return results
+
+
+#pos_v = sum([x[0] for k,x in i_item_votes.items()])
+#neg_v = len(i_item_votes) - pos_v
+#like_in = binom.pmf(pos_v, pos_v+neg_v, acc)
+#like_out = binom.pmf(neg_v, pos_v+neg_v, acc)
+
+#prob_in = like_in / (like_in  + like_out)

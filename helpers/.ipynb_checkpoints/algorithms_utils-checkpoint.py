@@ -169,16 +169,19 @@ def simulate_workers(workers_num, cheaters_prop, fixed_acc, workers_acc, base_ac
     return workers
 
 def get_random_worker_accuracy(workers_accuracy, item_id, votes):
-    item_votes = votes[item_id]
+    item_votes = votes[item_id].copy()
     worker_ids_used = item_votes.keys()
     workers_ids_range = workers_accuracy.keys()
     workers_ids_unused = [val for val in workers_ids_range if val not in worker_ids_used]
     
-    if (len(worker_ids_used) > 1000):
+    if (len(workers_ids_unused) == 0):
         used = len(worker_ids_used)
         ranges = len(workers_ids_range)
         unu = len(workers_ids_unused)
-        print(f'u: {used} - r: {ranges} - un: {unu}')
+        print(f'used: {used}')
+        print(f'workers: {ranges}')
+        print(f'unused: {unu}')
+        raise ValueError("Unused empty!?")
     
     selected_worker_id = np.random.choice(workers_ids_unused)
     worker_acc_pos = workers_accuracy[selected_worker_id][0]
@@ -316,3 +319,15 @@ def load_data(datasets, i, predicate_type = 'single'):
         y_predicate[pr] = data[pr].values
 
     return y_predicate
+
+#real datasets utils
+def get_dataset_next_worker_vote(responses, item_votes, i, categories):
+    item_responses = responses[responses[1] == i]
+    worker_votes = zip(item_responses[0], item_responses[2])
+    
+    for worker_id, worker_vote in worker_votes:
+        if(worker_id not in item_votes):
+            return worker_id, list(categories[0]).index(worker_vote) #get binary value 0/1
+            break
+                
+    raise ValueError('empty value')
