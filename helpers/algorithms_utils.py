@@ -231,7 +231,7 @@ def classify_items_with_expert(votes, gt, cf, th):
 
     return items_classification
 
-def classify_items_mv(votes, gt, cf, th):
+def classify_items(votes, gt, cf, th):
     items_classification = []
     for i, v in votes.items():
         p_in = cf(input_adapter_single(v))
@@ -279,11 +279,14 @@ class Metrics:
 
     @staticmethod
     #k penalization for false negatives
-    def compute_metrics(items_classification, gt, k = 1):
+    def compute_metrics(items_classification, gt, lr = 1):
         # FP == False Inclusion
         # FN == False Exclusion
         fp = fn = tp = tn = 0.
-        for gt_val, cl_val in zip(gt, items_classification):
+        for i in range(len(gt)):
+            gt_val = gt[i]
+            cl_val = items_classification[i]
+
             if gt_val and not cl_val:
                 fn += 1
             if not gt_val and cl_val:
@@ -294,9 +297,9 @@ class Metrics:
                 tn += 1
                         
 
-        recall = tp / (tp + fn)          
+        recall = tp / (tp + fn)
         precision = tp / (tp + fp)
-        loss = (fp + (fn * k)) / len(gt)
+        loss = (fp + (fn * lr)) / len(gt)
         
         return loss, recall, precision
     
