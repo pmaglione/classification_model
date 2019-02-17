@@ -97,7 +97,7 @@ def cost_estimator_em(v, ct, cf, cr, acc):
                 if(classification_prob_in >= classification_prob_out):
                     vote = np.random.binomial(1, acc) #inclusion vote
                 else:
-                    vote = np.random.binomial(0, acc) #exclusion vote
+                    vote = np.random.binomial(1, 1 - acc) #exclusion vote
                     
                 new_index = max(i_item_votes.keys()) + 1
                 i_item_votes[new_index] = [vote]
@@ -149,7 +149,7 @@ def cost_estimator_bayes(v, ct, cf, cr, acc):
                 if(classification_prob_in >= classification_prob_out):
                     vote = np.random.binomial(1, acc) #inclusion vote
                 else:
-                    vote = np.random.binomial(0, acc) #exclusion vote
+                    vote = np.random.binomial(0, 1 - acc) #exclusion vote
                     
                 new_index = max(i_item_votes.keys()) + 1
                 i_item_votes[new_index] = [vote]
