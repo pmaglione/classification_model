@@ -244,7 +244,7 @@ def classify_items(votes, gt, cf, th):
     return items_classification
 
 def get_items_predicted_classified(results):
-    return {i:v for (i,v) in results.items() if v == True}
+    return {i:v for i,v in results.items() if v == True}
 
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""
@@ -253,22 +253,11 @@ def chunks(l, n):
 #end
 
 #cost utils
-#calculates the total cost = crowd cost(all votes) + expert cost
-def get_total_cost(votes, cr, cf, th, use_expert):
+
+def get_total_cost(votes, cr):
     total_votes_amount = sum([len(v) for i, v in votes.items()]) 
-    
-    crowd_cost = total_votes_amount * cr
-    total_cost = crowd_cost
-    
-    if (use_expert): #use some criteria for identifying items sent to expert
-        unclassified_items_amount = len([i for (i, v) in votes.items() if cf(input_adapter_single(v)) <= th and cf(input_adapter_single(v)) > .3])
-        total_cost = crowd_cost + (unclassified_items_amount * (1 / cr))
-    else:
-        unclassified_items_amount = len([i for (i, v) in votes.items() if cf(input_adapter_single(v)) <= th])
-    
-    classified_items_amount = len(votes) - unclassified_items_amount
-    
-    return classified_items_amount, unclassified_items_amount, crowd_cost, total_cost
+
+    return total_votes_amount * cr
 
 def get_crowd_cost(item_votes, cr):
     return len(item_votes) * cr

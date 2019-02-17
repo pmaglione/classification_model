@@ -1,0 +1,4 @@
+loss_ratio,cost_ratio,class_fn,decision_fn,data_bal,threshold,cost,cost_std,loss,loss_std,recall,recall_std,precision,precision_std
+5,0.1,majority_voting,decision_function_mv,0.5,0.94,300.38,0.183,0.334,0.013,0.983,0.005,0.628,0.007
+5,0.1,majority_voting,decision_function_mv,0.5,0.96,300.29,0.25,0.328,0.024,0.984,0.008,0.63,0.008
+5,0.1,majority_voting,decision_function_mv,0.5,0.98,300.117,0.06,0.331,0.017,0.984,0.005,0.63,0.009
