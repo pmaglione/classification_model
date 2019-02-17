@@ -81,6 +81,11 @@ def decision_function_mv(items, votes, ct, cr, cf):
     
     return results
 
+def decision_function_mv_base(items, votes, ct, cr, cf):       
+    results = {i:(((1 - ct) <= cf(alg_utils.input_adapter_single(i_votes)) <= ct)) for i, i_votes in votes.items()}
+
+    return results
+
 def cost_estimator_em(v, ct, cf, cr, acc):
     simulated_costs = []
 
