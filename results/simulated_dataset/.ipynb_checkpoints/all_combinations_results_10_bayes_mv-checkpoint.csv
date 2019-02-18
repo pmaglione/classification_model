@@ -1,0 +1,5 @@
+loss_ratio,cost_ratio,class_fn,decision_fn,data_bal,threshold,cost,cost_std,loss,loss_std,recall,recall_std,precision,precision_std
+5,0.1,majority_voting,decision_function_bayes,0.5,0.7,300.0,0.0,0.47,0.038,0.844,0.014,0.841,0.011
+5,0.1,majority_voting,decision_function_bayes,0.5,0.8,572.41,24.633,0.124,0.018,0.96,0.007,0.954,0.012
+5,0.1,majority_voting,decision_function_bayes,0.5,0.9,652.89,38.688,0.105,0.034,0.971,0.013,0.937,0.012
+5,0.1,majority_voting,decision_function_bayes,0.5,0.95,666.74,27.611,0.115,0.026,0.971,0.008,0.919,0.014

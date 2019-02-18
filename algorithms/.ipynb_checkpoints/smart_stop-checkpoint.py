@@ -75,7 +75,7 @@ def decision_function_mv(items, votes, ct, cr, cf):
         else:
             cost_mean, cost_std = cost_estimator(item_votes, ct, cf, cr)
 
-            if(cost_mean > (1 * expert_cost_increment)):
+            if(cost_mean > 1):
                 results[item_id] = False
         
     
@@ -132,7 +132,7 @@ def decision_function_em(items, votes, ct, cr, cf):
         else:
             cost_mean, cost_std = cost_estimator_em(item_votes, ct, cf, cr, acc_est)
 
-            if(cost_mean > (1 * expert_cost_increment)):
+            if(cost_mean > 1):
                 results[item_id] = False
         
     
@@ -154,7 +154,7 @@ def cost_estimator_bayes(v, ct, cf, cr, acc):
                 if(classification_prob_in >= classification_prob_out):
                     vote = np.random.binomial(1, acc) #inclusion vote
                 else:
-                    vote = np.random.binomial(0, 1 - acc) #exclusion vote
+                    vote = np.random.binomial(1, 1 - acc) #exclusion vote
                     
                 new_index = max(i_item_votes.keys()) + 1
                 i_item_votes[new_index] = [vote]
@@ -184,7 +184,7 @@ def decision_function_bayes(items, votes, ct, cr, cf):
         else:
             cost_mean, cost_std = cost_estimator_bayes(item_votes, ct, cf, cr, acc_est)
 
-            if(cost_mean > (1 * expert_cost_increment)):
+            if(cost_mean > 1):
                 results[item_id] = False
         
     
