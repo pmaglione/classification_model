@@ -75,7 +75,7 @@ def decision_function_mv(items, votes, ct, cr, cf):
         else:
             cost_mean, cost_std = cost_estimator(item_votes, ct, cf, cr)
 
-            if(cost_mean > 1):
+            if(cost_mean > (1 * expert_cost_increment)):
                 results[item_id] = False
         
     
@@ -132,7 +132,7 @@ def decision_function_em(items, votes, ct, cr, cf):
         else:
             cost_mean, cost_std = cost_estimator_em(item_votes, ct, cf, cr, acc_est)
 
-            if(cost_mean > 1):
+            if(cost_mean > (1 * expert_cost_increment)):
                 results[item_id] = False
         
     
@@ -184,7 +184,7 @@ def decision_function_bayes(items, votes, ct, cr, cf):
         else:
             cost_mean, cost_std = cost_estimator_bayes(item_votes, ct, cf, cr, acc_est)
 
-            if(cost_mean > 1):
+            if(cost_mean > (1 * expert_cost_increment)):
                 results[item_id] = False
         
     
