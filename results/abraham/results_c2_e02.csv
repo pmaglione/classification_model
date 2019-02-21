@@ -1,0 +1,4 @@
+c,e,loss_ratio,cost_ratio,class_fn,decision_fn,data_bal,threshold,cost,cost_std,loss,loss_std,recall,recall_std,precision,precision_std
+2,0.2,5,0.05,majority_voting,abraham_decision,0.5,0.5,381.815,9.845,0.027,0.008,0.979,0.015,0.859,0.034
+2,0.2,5,0.05,majority_voting,abraham_decision,0.3,0.5,383.211,10.381,0.029,0.008,0.978,0.011,0.847,0.029
+2,0.2,5,0.05,majority_voting,abraham_decision,0.1,0.5,382.012,9.911,0.026,0.007,0.983,0.012,0.852,0.03

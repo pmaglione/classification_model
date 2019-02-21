@@ -1,0 +1,13 @@
+votes,loss_ratio,cost_ratio,class_fn,decision_fn,data_bal,threshold,cost,cost_std,loss,loss_std,recall,recall_std,precision,precision_std
+3,5,0.05,majority_voting,majority_voting,0.5,0.5,150.0,0.0,0.472,0.049,0.843,0.019,0.844,0.017
+3,5,0.05,majority_voting,majority_voting,0.3,0.5,150.0,0.0,0.345,0.035,0.844,0.023,0.697,0.019
+3,5,0.05,majority_voting,majority_voting,0.1,0.5,150.0,0.0,0.22,0.018,0.847,0.028,0.373,0.023
+5,5,0.05,majority_voting,majority_voting,0.5,0.5,250.0,0.0,0.305,0.035,0.898,0.013,0.9,0.011
+5,5,0.05,majority_voting,majority_voting,0.3,0.5,250.0,0.0,0.225,0.027,0.897,0.018,0.794,0.021
+5,5,0.05,majority_voting,majority_voting,0.1,0.5,250.0,0.0,0.146,0.017,0.9,0.027,0.486,0.025
+7,5,0.05,majority_voting,majority_voting,0.5,0.5,350.0,0.0,0.214,0.033,0.928,0.013,0.933,0.01
+7,5,0.05,majority_voting,majority_voting,0.3,0.5,350.0,0.0,0.154,0.02,0.929,0.013,0.855,0.018
+7,5,0.05,majority_voting,majority_voting,0.1,0.5,350.0,0.0,0.099,0.015,0.929,0.027,0.594,0.035
+10,5,0.05,majority_voting,majority_voting,0.5,0.5,500.0,0.0,0.091,0.016,0.98,0.006,0.925,0.01
+10,5,0.05,majority_voting,majority_voting,0.3,0.5,500.0,0.0,0.084,0.012,0.98,0.007,0.843,0.017
+10,5,0.05,majority_voting,majority_voting,0.1,0.5,500.0,0.0,0.082,0.011,0.98,0.015,0.578,0.028
