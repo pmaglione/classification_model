@@ -139,3 +139,7 @@ loss_ratio,cost_ratio,class_fn,decision_fn,data_bal,threshold,cost,cost_std,loss
 5,0.2,majority_voting,decision_function_bayes,0.3,0.8,930.5,20.18,0.176,0.016,0.965,0.011,0.701,0.018
 5,0.2,majority_voting,decision_function_bayes,0.3,0.9,871.58,40.325,0.215,0.016,0.957,0.012,0.657,0.015
 5,0.2,majority_voting,decision_function_bayes,0.3,0.95,770.34,45.002,0.254,0.022,0.959,0.018,0.6,0.011
+5,0.2,majority_voting,decision_function_bayes,0.1,0.7,600.0,0.0,0.217,0.021,0.844,0.037,0.378,0.016
+5,0.2,majority_voting,decision_function_bayes,0.1,0.8,926.42,11.686,0.166,0.006,0.963,0.025,0.395,0.01
+5,0.2,majority_voting,decision_function_bayes,0.1,0.9,845.2,16.218,0.227,0.029,0.956,0.016,0.32,0.024
+5,0.2,majority_voting,decision_function_bayes,0.1,0.95,758.36,42.252,0.272,0.027,0.949,0.043,0.278,0.015
