@@ -1,0 +1,5 @@
+dataset,items,loss_ratio,cost_ratio,class_fn,decision_fn,data_bal,threshold,cost,cost_std,loss,loss_std,recall,recall_std,precision,precision_std
+RTE,800,5,0.05,majority_voting,decision_function_bayes,0.5,0.7,120.0,0.0,0.208,0.03,0.929,0.013,0.939,0.009
+RTE,800,5,0.05,majority_voting,decision_function_bayes,0.5,0.8,120.0,0.0,0.203,0.032,0.933,0.012,0.93,0.012
+RTE,800,5,0.05,majority_voting,decision_function_bayes,0.5,0.9,189.455,2.363,0.021,0.011,0.993,0.004,0.994,0.004
+RTE,800,5,0.05,majority_voting,decision_function_bayes,0.5,0.95,214.33,7.13,0.012,0.007,0.996,0.003,0.996,0.004

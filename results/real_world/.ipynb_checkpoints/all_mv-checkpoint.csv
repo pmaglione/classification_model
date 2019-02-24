@@ -1,0 +1,9 @@
+dataset,items,loss_ratio,cost_ratio,class_fn,decision_fn,data_bal,threshold,cost,cost_std,loss,loss_std,recall,recall_std,precision,precision_std
+BarzanMozafari,1000,5,0.05,majority_voting,decision_function_bayes,0.491,0.5,150.0,0.0,0.676,0.073,0.773,0.03,0.764,0.008
+BarzanMozafari,1000,5,0.05,majority_voting,decision_function_bayes,0.491,0.5,250.0,0.0,0.519,0.047,0.826,0.02,0.818,0.014
+BarzanMozafari,1000,5,0.05,majority_voting,decision_function_bayes,0.491,0.5,350.0,0.0,0.407,0.029,0.862,0.011,0.863,0.017
+BarzanMozafari,1000,5,0.05,majority_voting,decision_function_bayes,0.491,0.5,500.0,0.0,0.211,0.021,0.948,0.009,0.846,0.01
+RTE,800,5,0.05,majority_voting,decision_function_bayes,0.5,0.5,120.0,0.0,0.208,0.036,0.931,0.013,0.93,0.012
+RTE,800,5,0.05,majority_voting,decision_function_bayes,0.5,0.5,200.0,0.0,0.1,0.019,0.967,0.007,0.966,0.008
+RTE,800,5,0.05,majority_voting,decision_function_bayes,0.5,0.5,280.0,0.0,0.044,0.018,0.986,0.007,0.983,0.007
+RTE,800,5,0.05,majority_voting,decision_function_bayes,0.5,0.5,400.0,0.0,0.011,0.004,0.998,0.002,0.988,0.006
