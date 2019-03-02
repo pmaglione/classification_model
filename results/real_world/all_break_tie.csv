@@ -1,6 +1,6 @@
 dataset,items,votes,loss_ratio,cost_ratio,class_fn,decision_fn,data_bal,threshold,cost,cost_std,loss,loss_std,recall,recall_std,precision,precision_std
-BarzanMozafari,1000,3,5,0.05,majority_voting,decision_function_bayes,0.491,0.5,121.475,0.506,0.659,0.052,0.779,0.018,0.768,0.018
-RTE,800,3,5,0.05,majority_voting,decision_function_bayes,0.5,0.5,90.805,0.788,0.211,0.017,0.93,0.007,0.929,0.007
-SpamCF,101,3,5,0.05,majority_voting,decision_function_bayes,0.3069306930693069,0.5,12.24,0.247,0.556,0.109,0.752,0.061,0.573,0.065
-TEMP,462,3,5,0.05,majority_voting,decision_function_bayes,0.4393939393939394,0.5,52.445,0.441,0.163,0.027,0.943,0.012,0.917,0.016
-WVSCM,160,3,5,0.05,majority_voting,decision_function_bayes,0.3625,0.5,19.61,0.292,0.652,0.094,0.728,0.053,0.627,0.039
+BarzanMozafari,1000,3,5,0.05,majority_voting,break_tie,0.491,0.5,121.475,0.506,0.659,0.052,0.779,0.018,0.768,0.018
+RTE,800,3,5,0.05,majority_voting,break_tie,0.5,0.5,90.805,0.788,0.211,0.017,0.93,0.007,0.929,0.007
+SpamCF,101,3,5,0.05,majority_voting,break_tie,0.3069306930693069,0.5,12.24,0.247,0.556,0.109,0.752,0.061,0.573,0.065
+TEMP,462,3,5,0.05,majority_voting,break_tie,0.4393939393939394,0.5,52.445,0.441,0.163,0.027,0.943,0.012,0.917,0.016
+WVSCM,160,3,5,0.05,majority_voting,break_tie,0.3625,0.5,19.61,0.292,0.652,0.094,0.728,0.053,0.627,0.039

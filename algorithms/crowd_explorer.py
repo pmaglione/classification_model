@@ -1,17 +1,15 @@
 import numpy as np
-import
+import 
 
 action_stop = 0
 action_continue = 1
 
-
-def majority_voting(votes):
-    pos = sum(votes)
-    neg = len(votes) - pos
-    if pos >= neg:
-        return 1
-    else:
-        return 0
+'''
+    Input: state object
+    Output: Label with more votes. In case of tie, returns the one with lower index number.
+'''
+def majority_voting(st):
+    return st.N.index(max(st.N))
 
 consensus_rule_hyperparameter = majority_voting
 cost_hyperparameter = 0.1
@@ -27,7 +25,7 @@ class TaskState:
 def calculate_voi():
     pass
 
-def crowd_explorer_decision(tasks, horizon):
+def crowd_explorer_decision(tasks, horizon, workers_accuracy):
     prm = [] #models
     actions = []
     for task in tasks:
@@ -62,8 +60,8 @@ def sample_execution_path(task_state, models, horizon, t):
         task_votes.append(next_vote)
         label = sample_next_vote(task_votes, models)
     #endif
-    task_state.N[label] = task_state.N[label] + 1
-    task_state.N_num = task_state.N_num + 1
+    task_state.N[label] += 1
+    task_state.N_num += 1
     task_state.V_neg = ((max(task_state.N) / task_state.N_num) * utility_hyperparameter) - (t - cost_hyperparameter)
     
     if t < horizon:
