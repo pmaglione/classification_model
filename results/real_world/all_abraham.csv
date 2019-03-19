@@ -1,6 +1,6 @@
-dataset,items,loss_ratio,cost_ratio,class_fn,decision_fn,data_bal,threshold,cost,cost_std,loss,loss_std,recall,recall_std,precision,precision_std
-RTE,800,5,0.05,majority_voting,decision_function_bayes,0.5,0.5,210.315,5.36,0.015,0.008,0.995,0.003,0.994,0.004
-SpamCF,101,5,0.05,majority_voting,decision_function_bayes,0.3069306930693069,0.5,52.055,3.603,0.082,0.065,0.968,0.041,0.901,0.022
-TEMP,462,5,0.05,majority_voting,decision_function_bayes,0.4393939393939394,0.5,119.42,3.206,0.011,0.008,0.997,0.003,0.991,0.006
-BarzanMozafari,1000,5,0.05,majority_voting,decision_function_bayes,0.491,0.5,495.735,13.206,0.129,0.015,0.957,0.006,0.953,0.006
-WVSCM,160,5,0.05,majority_voting,decision_function_bayes,0.3625,0.5,93.935,6.77,0.206,0.072,0.912,0.037,0.878,0.048
+c,e,dataset,items,loss_ratio,cost_ratio,class_fn,decision_fn,data_bal,threshold,cost,cost_std,loss,loss_std,recall,recall_std,precision,precision_std
+2,0.2,RTE,800,5,0.05,majority_voting,decision_function_bayes,0.5,0.5,210.315,5.36,0.015,0.008,0.995,0.003,0.994,0.004
+2,0.2,SpamCF,101,5,0.05,majority_voting,decision_function_bayes,0.3069306930693069,0.5,52.055,3.603,0.082,0.065,0.968,0.041,0.901,0.022
+2,0.2,TEMP,462,5,0.05,majority_voting,decision_function_bayes,0.4393939393939394,0.5,119.42,3.206,0.011,0.008,0.997,0.003,0.991,0.006
+2,0.2,BarzanMozafari,1000,5,0.05,majority_voting,decision_function_bayes,0.491,0.5,495.735,13.206,0.129,0.015,0.957,0.006,0.953,0.006
+2,0.2,WVSCM,160,5,0.05,majority_voting,decision_function_bayes,0.3625,0.5,93.935,6.77,0.206,0.072,0.912,0.037,0.878,0.048
