@@ -1,0 +1,16 @@
+loss_ratio,cost_ratio,class_fn,decision_fn,data_bal,threshold,cost,cost_std,loss,loss_std,recall,recall_std,precision,precision_std,diff_size,num_items
+5,0.05,majority_voting,consecutive_decision,0.5,0.5,1287.765,44.044,0.086,0.014,0.98,0.005,0.933,0.008,2,1000
+5,0.05,majority_voting,consecutive_decision,0.3,0.5,1317.195,42.417,0.083,0.018,0.974,0.011,0.871,0.016,2,1000
+5,0.05,majority_voting,consecutive_decision,0.1,0.5,1314.35,33.4,0.071,0.012,0.977,0.012,0.623,0.033,2,1000
+5,0.05,majority_voting,consecutive_decision,0.5,0.5,4340.02,45.929,0.008,0.005,0.998,0.002,0.995,0.002,3,1000
+5,0.05,majority_voting,consecutive_decision,0.3,0.5,4333.625,38.571,0.011,0.007,0.995,0.005,0.989,0.007,3,1000
+5,0.05,majority_voting,consecutive_decision,0.1,0.5,4336.68,42.715,0.004,0.003,0.998,0.006,0.968,0.01,3,1000
+5,0.05,majority_voting,consecutive_decision,0.5,0.5,4924.27,15.57,0.001,0.002,1.0,0.001,1.0,0.001,4,1000
+5,0.05,majority_voting,consecutive_decision,0.3,0.5,4918.24,17.379,0.0,0.0,1.0,0.0,0.999,0.002,4,1000
+5,0.05,majority_voting,consecutive_decision,0.1,0.5,4921.18,12.931,0.001,0.002,0.999,0.003,0.992,0.009,4,1000
+5,0.05,majority_voting,consecutive_decision,0.5,0.5,4994.345,4.231,0.0,0.0,1.0,0.0,1.0,0.0,5,1000
+5,0.05,majority_voting,consecutive_decision,0.3,0.5,4991.505,5.083,0.0,0.0,1.0,0.0,1.0,0.001,5,1000
+5,0.05,majority_voting,consecutive_decision,0.1,0.5,4992.85,6.353,0.0,0.0,1.0,0.0,1.0,0.0,5,1000
+5,0.05,majority_voting,consecutive_decision,0.5,0.5,4999.775,0.555,0.0,0.0,1.0,0.0,1.0,0.0,6,1000
+5,0.05,majority_voting,consecutive_decision,0.3,0.5,4999.72,0.84,0.0,0.0,1.0,0.0,1.0,0.0,6,1000
+5,0.05,majority_voting,consecutive_decision,0.1,0.5,4999.76,0.48,0.0,0.0,1.0,0.0,1.0,0.0,6,1000

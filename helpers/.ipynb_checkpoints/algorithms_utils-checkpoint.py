@@ -148,7 +148,7 @@ def print_hyperparameters(cf, cr,base_votes_per_item, drawing_simulations_amount
 #end
     
 #workers
-def simulate_workers(workers_num, cheaters_prop, fixed_acc, workers_acc, base_acc = .5):
+def simulate_workers(workers_num, cheaters_prop, fixed_acc, workers_acc, base_acc = .5, max_acc = 1):
     workers = {}
     for i in range(workers_num):
         if (fixed_acc == False):
@@ -157,7 +157,8 @@ def simulate_workers(workers_num, cheaters_prop, fixed_acc, workers_acc, base_ac
                 worker_acc_pos = worker_acc_neg = 0.5
             else:
                 # worker_type is 'worker'
-                worker_acc_pos = base_acc + (np.random.beta(1, 1) * (1 - base_acc))
+                worker_acc_pos = np.random.uniform(base_acc, max_acc)
+                #base_acc + (np.random.beta(1, 1) * (1 - base_acc))
                 #worker_acc_neg = worker_acc_pos + 0.1 if worker_acc_pos + 0.1 <= 1. else 1.
                 worker_acc_neg = worker_acc_pos
         else:
@@ -291,6 +292,45 @@ class Metrics:
         loss = (fp + (fn * lr)) / len(gt)
         
         return loss, recall, precision
+    
+    @staticmethod
+    # k penalization for false negatives
+    def compute_metrics_full(items_classification, gt, fnc=1, fpc=1, ucc=1):
+        # FP == False Inclusion
+        # FN == False Exclusion
+        fp = fn = tp = tn = 0.
+        for i in range(len(gt)):
+            gt_val = gt[i]
+            cl_val = items_classification[i]
+
+            if gt_val and not cl_val:
+                fn += 1
+            if not gt_val and cl_val:
+                fp += 1
+            if gt_val and cl_val:
+                tp += 1
+            if not gt_val and not cl_val:
+                tn += 1
+                
+
+        recall = tp / (tp + fn)
+        if (tp + fp) > 0:
+            precision = tp / (tp + fp)
+        else:
+            precision = 0
+        loss = (fp + (fn * fnc)) / len(items_classification)
+        if (precision + recall) > 0:
+            f1 = (2 * precision * recall) / (precision + recall)
+        else:
+            f1 = 0
+        beta = fnc
+        if (beta**2 * precision + recall) > 0:
+            f_beta = (beta**2 + 1) * precision * recall / (beta**2 * precision + recall)
+        else:
+            f_beta = 0
+        weighted_classification_error = (fpc * fp + fnc * fn) / len(items_classification) #(fpc * fp + fnc * fn + ucc*UC)/N
+
+        return loss, recall, precision, f1, beta, f_beta, weighted_classification_error
     
 #end
 
